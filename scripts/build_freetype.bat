@@ -58,7 +58,7 @@ IF %BUILDPLATFORM% EQU x64 (
     CALL copy /Y objs\vc2010\x64\freetype%FREETYPE_VERSION_FILE%.lib freetype.lib
     IF ERRORLEVEL 1 GOTO ERROR
   ) ELSE (
-    CALL copy /Y objs\vc2010\x64\freetype%FREETYPE_VERSION_FILE%D.lib freetype.lib
+	CALL copy /Y objs\vc2010\x64\freetype%FREETYPE_VERSION_FILE%D.lib freetype.lib
     IF ERRORLEVEL 1 GOTO ERROR
     CALL copy /Y objs\vc2010\x64\freetype%FREETYPE_VERSION_FILE%D.pdb freetype.pdb
     IF ERRORLEVEL 1 GOTO ERROR
@@ -68,9 +68,9 @@ IF %BUILDPLATFORM% EQU x64 (
     CALL copy /Y objs\vc2010\Win32\freetype%FREETYPE_VERSION_FILE%.lib freetype.lib
     IF ERRORLEVEL 1 GOTO ERROR
   ) ELSE (
-    CALL copy /Y objs\win32\vc2010\freetype%FREETYPE_VERSION_FILE%_D.lib freetype.lib
+    CALL copy /Y objs\vc2010\Win32\freetype%FREETYPE_VERSION_FILE%D.lib freetype.lib
     IF ERRORLEVEL 1 GOTO ERROR
-    CALL copy /Y objs\debug\freetype.pdb freetype.pdb
+    CALL copy /Y objs\vc2010\Win32\freetype%FREETYPE_VERSION_FILE%D.pdb freetype.pdb
     IF ERRORLEVEL 1 GOTO ERROR
   )
 )
