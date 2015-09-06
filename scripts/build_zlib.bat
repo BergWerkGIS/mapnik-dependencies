@@ -35,12 +35,13 @@ if NOT EXIST "zlib" (
 )
 ENDLOCAL
 
-:: rebuild assembly with /safeseh since vs2015 requires it
+:: reassemble with /safeseh since vs2015 requires it for win32
 SET ARCH=x64
 IF %TARGET_ARCH% EQU 32 SET ARCH=x86
 CD %PKGDIR%\zlib\contrib\masm%ARCH%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-sed -i "s/^ml/ml \/safeseh/" bld_ml%TARGET_ARCH%.bat
+:: only ml needs the /safeseh parameter (not ml64), so this sed is a noop on bld_ml64.bat
+sed -i "s/^ml /ml \/safeseh /" bld_ml%TARGET_ARCH%.bat
 CALL bld_ml%TARGET_ARCH%.bat
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
