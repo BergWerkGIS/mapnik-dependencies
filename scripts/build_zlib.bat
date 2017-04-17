@@ -35,36 +35,26 @@ if NOT EXIST "zlib" (
 )
 ENDLOCAL
 
-ECHO.
-ECHO.
-ECHO -------------------------------------
-ECHO TODO add /SAFESEH to MASM projects and build normal Release
-ECHO that relies on MASM projects
-ECHO -------------------------------------
-ECHO.
-ECHO.
-::SET ARCH=x64
-::IF %TARGET_ARCH% EQU 32 SET ARCH=x86
-::CD %PKGDIR%\zlib\contrib\masm%ARCH%
-::IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-::CALL bld_ml%TARGET_ARCH%.bat
-::IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+:: reassemble with /safeseh since vs2015 requires it for win32
+SET ARCH=x64
+IF %TARGET_ARCH% EQU 32 SET ARCH=x86
+CD %PKGDIR%\zlib\contrib\masm%ARCH%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+:: only ml needs the /safeseh parameter (not ml64), so this sed is a noop on bld_ml64.bat
+sed -i "s/^ml /ml \/safeseh /" bld_ml%TARGET_ARCH%.bat
+CALL bld_ml%TARGET_ARCH%.bat
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 :: --- build with Visual Studio
 CD %PKGDIR%\zlib\contrib\vstudio\vc11
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-
-SET BT=Debug
-IF "%BUILD_TYPE%"=="Release" SET BT=ReleaseWithoutAsm
-
-REM /p:ImageHasSafeExceptionHandlers=NO ^
 
 msbuild zlibvc.sln ^
 /p:ForceImportBeforeCppTargets=%ROOTDIR%\scripts\force-debug-information-for-sln.props ^
 /m:%NUMBER_OF_PROCESSORS% ^
 /toolsversion:%TOOLS_VERSION% ^
 /p:BuildInParallel=true ^
-/p:Configuration=%BT% ^
+/p:Configuration=%BUILD_TYPE% ^
 /p:Platform=%BUILDPLATFORM% ^
 /p:PlatformToolset=%PLATFORM_TOOLSET%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
@@ -77,13 +67,13 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 
 ::copy shared lib, dll
-copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibDll%BT%\zlibwapi.lib %PKGDIR%\zlib\
+copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibDll%BUILD_TYPE%\zlibwapi.lib %PKGDIR%\zlib\
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibDll%BT%\zlibwapi.dll %PKGDIR%\zlib\
+copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibDll%BUILD_TYPE%\zlibwapi.dll %PKGDIR%\zlib\
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ::copy static lib
-copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibStat%BT%\zlibstat.lib %PKGDIR%\zlib\zlib.lib
+copy %PKGDIR%\zlib\contrib\vstudio\vc11\%PLATFORMX%\ZlibStat%BUILD_TYPE%\zlibstat.lib %PKGDIR%\zlib\zlib.lib
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 

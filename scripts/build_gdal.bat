@@ -54,7 +54,7 @@ IF ERRORLEVEL 1 GOTO ERROR
 :: !!! BUILD FIRST and then do 'devinstall'!!!
 SET EXPAT_DIR="%PKGDIR%\expat"
 SET EXPAT_INCLUDE=-I%EXPAT_DIR%\lib
-SET EXPAT_LIB=%EXPAT_DIR%\win32\bin\Release\libexpat.lib
+SET EXPAT_LIB=%EXPAT_DIR%\win32\bin\%BUILD_TYPE%\libexpat.lib
 SET TIFF_INC="-I%PKGDIR%\libtiff\libtiff"
 SET TIFF_LIB="%PKGDIR%\libtiff\libtiff\libtiff_i.lib"
 SET TIFF_OPTS=/DBIGTIFF_SUPPORT /DCHUNKY_STRIP_READ_SUPPORT=1 /DDEFER_STRILE_LOAD=1
