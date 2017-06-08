@@ -1,20 +1,9 @@
-language: cpp
+language: generic
 
 sudo: false
-
-compiler:
-  - gcc
 
 os:
   - linux
 
-#env:
-#  global:
-#  - secure: "RbJ5yQTXRm/lvqdIwqco70nmdIC07XMEBHGLt4Clz4kb8gJ6O4JSfnKxt+8AiufxbWjYEfvPsx+FsRw6J21GcXVTE6qmcD7EbtAFh/ZEVyZiOf1/qQxhL2E6RYCwb6hWuWNB/d6Fn4SxbC0lNwtcbL9CN6jE3ttDLmYPpGJptRM="
-#  - secure: "pvlpQj4zywCjDrRuiP3Bx0Eq9ex/q4VAjEOydKOslTAGqvI0RaCjGdolenLpnJINmLX7E9fhSgxR0Ct4EjBbwbk4A9KI2iwPaGCpAK/Kpod+p8ZWdHjNvDVX/IVhW0WU5xA6siL4MTG2B65OFjYzoqP1fEA9GENWJrWOcfABnOU="
-
 before_install:
  - ./scripts/publish-binary.sh $TRAVIS_COMMIT
-
-install: true
-script: true

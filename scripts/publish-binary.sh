@@ -38,8 +38,8 @@ security_groups=""
 user_data="<powershell>
     ([ADSI]\"WinNT://./Administrator\").SetPassword(\"${CRED}\");
     \$env:CRED=\"${CRED}\";
-    \$env:AWS_ACCESS_KEY_ID=\"${PUBLISH_KEY}\";
-    \$env:AWS_SECRET_ACCESS_KEY=\"${PUBLISH_ACCESS}\";
+    \$env:AWS_ACCESS_KEY_ID=\"${AWS_ACCESS_KEY_ID}\";
+    \$env:AWS_SECRET_ACCESS_KEY=\"${AWS_SECRET_ACCESS_KEY}\";
     Invoke-WebRequest https://raw.githubusercontent.com/mapbox/windows-builds/master/scripts/${BUILD_CMD} -OutFile Z:\\${BUILD_CMD};
     & Z:\\${BUILD_CMD} \"${COMMIT_MESSAGE}\" \"${gitsha}\"
     Write-Host \"exiting userdata\"

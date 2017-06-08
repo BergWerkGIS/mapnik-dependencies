@@ -133,8 +133,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 cd %PKGDIR%\mapnik-%MAPNIKBRANCH%\mapnik-gyp
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 IF NOT EXIST %SDK_PKG_NAME% (ECHO SDK package not found %SDK_PKG_NAME% && GOTO ERROR)
-::CALL aws s3 cp --acl public-read %SDK_PKG_NAME% mapnik.s3.amazonaws.com/dist/dev/
-CALL "C:\Program Files\Amazon\AWSCLI\aws.exe" s3 cp --acl public-read %SDK_PKG_NAME% s3://mapnik/dist/dev/
+CALL "C:\Program Files\Amazon\AWSCLI\aws.exe" s3 cp --acl public-read %SDK_PKG_NAME% s3://mapbox/mapnik-binaries/
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 ECHO upload of %SDK_PKG_NAME% completed
 

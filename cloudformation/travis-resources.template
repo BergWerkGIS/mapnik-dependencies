@@ -1,0 +1,107 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "windows build user",
+    "Resources": {
+        "Security": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Allow web on 80 and RDP on 3389",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "3389",
+                        "ToPort": "3389",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        },
+        "TestUser": {
+            "Type": "AWS::IAM::User",
+            "Properties": {
+                "Policies": [
+                    {
+                        "PolicyName": "publish",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:GetObject",
+                                        "s3:PutObject",
+                                        "s3:PutObjectAcl"
+                                    ],
+                                    "Resource": [
+                                        "arn:aws:s3:::mapbox/mapnik-binaries/*"
+                                    ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "ec2:DescribeInstances",
+                                        "ec2:DescribeInstanceStatus",
+                                        "ec2:RunInstances",
+                                        "ec2:CreateImage",
+                                        "ec2:DescribeImages",
+                                        "ec2:CopyImage",
+                                        "ec2:ModifyImageAttribute",
+                                        "ec2:modifySnapshotAttribute",
+                                        "ec2:CreateTags",
+                                        "ec2:StopInstances",
+                                        "ec2:TerminateInstances"
+                                    ],
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "PolicyName": "fedtoken",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "sts:GetFederationToken"
+                                    ],
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "TestUserKey": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": {
+                    "Ref": "TestUser"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "AccessKeyId": {
+            "Value": {
+                "Ref": "TestUserKey"
+            }
+        },
+        "SecretAccessKey": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "TestUserKey",
+                    "SecretAccessKey"
+                ]
+            }
+        }
+    }
+}
