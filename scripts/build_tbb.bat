@@ -8,20 +8,22 @@ IF "%ROOTDIR%"=="" ( echo "ROOTDIR variable not set" && GOTO ERROR )
 cd %PKGDIR%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-CALL %ROOTDIR%\scripts\download tbb%TBB_VERSION%_src.tgz
+CALL %ROOTDIR%\scripts\download https://github.com/01org/tbb/archive/2018_U1.tar.gz
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+powershell "if (!$(Get-FileHash 2018_U1.tar.gz -Algorithm SHA1 | Select-String F0692F6E5665E5069D70813532B0DF34FCE7CF4D)) { Write-Error 'SHA1 mismatch' -Category InvalidData ; exit 1 }"
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 if EXIST tbb ECHO found extracted sources && GOTO SRCFOUND
 
 ECHO extracting
-CALL bsdtar xfz tbb%TBB_VERSION%_src.tgz
-RENAME tbb%TBB_VERSION% tbb
+CALL bsdtar xfz 2018_U1.tar.gz
+RENAME tbb-2018_U1 tbb
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 
 :SRCFOUND
 
-cd %PKGDIR%\tbb\build\vs2010
+cd %PKGDIR%\tbb\build\vs2013
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 

@@ -27,7 +27,7 @@ $boost_include_src_dir = "$env:PKGDIR\boost\boost\"
 $boost_include_dest_dir = "${osrm_deps_dir}boost\include\boost-1_$env:BOOST_VERSION\"
 
 #tbb
-$tbb_lib_src_dir = "$env:PKGDIR\tbb\lib\v140\intel64\Release\"
+$tbb_lib_src_dir = "$env:PKGDIR\tbb\lib\v140\x64\Release\"
 $tbb_include_src_dir = "$env:PKGDIR\tbb\include\"
 
 #delete existing deps dir
@@ -63,7 +63,7 @@ $file_list = @{
         ("$env:PKGDIR" + "\expat\lib\expat_external.h"),
         ("$env:PKGDIR" + "\lua\src\lauxlib.h"),
         ("$env:PKGDIR" + "\lua\src\lua.h"),
-        ("$env:PKGDIR" + "\lua\etc\lua.hpp"),
+        ("$env:PKGDIR" + "\lua\src\lua.hpp"),
         ("$env:PKGDIR" + "\lua\src\luaconf.h"),
         ("$env:PKGDIR" + "\lua\src\lualib.h"),
         ("$env:PKGDIR" + "\stxxl\include\stxxl.h"),

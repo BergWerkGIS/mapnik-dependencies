@@ -38,7 +38,9 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 SET ARCH=x64
 if %TARGET_ARCH% EQU 32 SET ARCH=x86
 
-SET PKGNAME=osrm-deps-win-%TOOLS_VERSION%-%ARCH%.7z
+for /f %%i in ('powershell Get-Date -format "yyyy.MM"') do set DATE_VERSION=%%i
+
+SET PKGNAME=osrm-deps-win-%ARCH%-%TOOLS_VERSION%-%DATE_VERSION%.7z
 
 CD %PKGDIR%\osrm-deps
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
