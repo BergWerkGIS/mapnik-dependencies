@@ -4,7 +4,8 @@
 :: see bottom of this file
 
 :::::::::::::: OVERRIDABLE PARAMETERS
-set TARGET_ARCH=64
+SET TOOLS_VERSION=14.0
+SET TARGET_ARCH=64
 SET MAPNIKBRANCH=master
 SET BUILDMAPNIKPYTHON=0
 SET MAPNIKGYPBRANCH=master
@@ -79,12 +80,12 @@ GOTO NEXT-ARG
 
 ::BAIL OUT IF DEBUG or VS2013
 IF DEFINED BUILD_TYPE IF NOT "%BUILD_TYPE%"=="Release" (SET BUILD_TYPE=) && ECHO only Release builds supported! && SET EL=1 && GOTO ERROR
-IF DEFINED TOOLS_VERSION IF NOT "%TOOLS_VERSION%"=="14.0" (SET TOOLS_VERSION=) && ECHO only Visual Studio 2015 supported! && SET EL=1 && GOTO ERROR
+IF DEFINED TOOLS_VERSION IF NOT "%TOOLS_VERSION%"=="14.0" IF NOT "%TOOLS_VERSION%"=="15.0" (SET TOOLS_VERSION=) && ECHO only Visual Studio 2015^/2017 supported! && SET EL=1 && GOTO ERROR
 
 
 :::::::::::::: FIXED PARAMETERS
 SET BUILD_TYPE=Release
-SET TOOLS_VERSION=14.0
+IF NOT DEFINED TOOLS_VERSION SET TOOLS_VERSION=14.0
 SET RUNTIME_VERSION=vcredist-VS2015
 
 
@@ -142,16 +143,35 @@ SET PATH=%CD%\tmp-bin;%PATH%
 ::make.exe that comes with gnu-win-tools cannot compile cairo
 SET PATH=%CD%\tmp-bin\make;%PATH%
 
+IF "%TOOLS_VERSION%"=="15.0" GOTO SETUPVS2017
 
+ECHO ------- setting up for VS 2015
 SET MSVC_VER=1900
 SET PLATFORM_TOOLSET=v140
-REM :: CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-REM :: >..\..\src\agg\process_markers_symbolizer.cpp(108): fatal error C1060: compiler is out of heap space [C:\dev2\mapnik-dependencies\packages\mapnik-3.x\mapnik-gyp\build\mapnik.vcxproj]
-REM :: configure this Command Prompt window for 64-bit command-line builds that target x86 platforms
-REM :: http://msdn.microsoft.com/en-us/library/x4d2c09s.aspx
 IF "%TARGET_ARCH%" == "32" CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64_x86
 IF "%TARGET_ARCH%" == "64" CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
 IF %ERRORLEVEL% NEQ 0 ECHO error calling vcvarsall.bat && GOTO ERROR
+GOTO VSSETUPFINISHED
+
+:SETUPVS2017
+ECHO ------- setting up for VS 2017
+REM test for VS2017 is _MSC_VER > 1900
+REM VS2017 has '19xx' to indicate binary-compatible toolsets with VS2015
+SET MSVC_VER=1911
+SET PLATFORM_TOOLSET=v141
+ECHO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ECHO TODO: figure out how to get correct path
+ECHO       to VS2017 install
+ECHO       ^%VS150COMNTOOLS^% has the right path
+ECHO       only *AFTER* 'VsDevCmd.bat' has run
+ECHO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+IF "%TARGET_ARCH%" == "32" ECHO setting up for 32bit build && CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=amd64 -app_platform=Desktop
+IF "%TARGET_ARCH%" == "64" ECHO setting up for 64bit build && CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64 -app_platform=Desktop
+IF %ERRORLEVEL% NEQ 0 ECHO error calling VsDevCmd.bat && GOTO ERROR
+
+
+:VSSETUPFINISHED
+
 
 WHERE msbuild >NUL
 IF %ERRORLEVEL% NEQ 0 ECHO msbuild not found && GOTO ERROR

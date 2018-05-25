@@ -1,0 +1,13 @@
+diff --git a/boost/spirit/home/support/attributes.hpp b/boost/spirit/home/support/attributes.hpp
+index 889e3a3..da8f981 100644
+--- a/boost/spirit/home/support/attributes.hpp
++++ b/boost/spirit/home/support/attributes.hpp
+@@ -1033,7 +1033,7 @@ namespace boost { namespace spirit { namespace traits
+     void swap_impl(T& a, T& b)
+     {
+         using namespace std;
+-        swap(a, b);
++        std::swap(a, b);
+     }
+ 
+     template <typename A>
