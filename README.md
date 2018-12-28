@@ -27,8 +27,9 @@ Other supported software:
 
 ## Requirements
 
- - __64bit__ operating system (W7, 8, 8.1, Server 2012)
+ - __64bit__ operating system (W7, 8, 8.1, 10, Server 2012)
  - [Visual Studio 2015](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx), **No earlier versions suppported, C++11 support needed!**
+   Note* - Uninstall update 3 from VS 2015 if you have installed with update3. This causes [the issue in compilation] (https://github.com/mapbox/windows-builds/issues/92)
  - [Python 2.7 32 bit](https://www.python.org/downloads/windows/) installed into `C:\Python27`
  - [git](https://msysgit.github.io/) installed into `C:\Program Files (x86)\Git`
 
